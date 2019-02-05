@@ -1,1 +1,3 @@
 # Asterisk-SIP-trunk-monitor
+
+There is a well known bug in Asterisk that causes the calls through system to hang when a SIP trunk goes offline (see https://community.freepbx.org/t/attn-experts-help-asterisk-fix-the-extensions-go-down-when-internet-goes-down-bug-in-asterisk/12560#post_7). This is particularly troublesome in the case of a client with an onsite PBX during a power or Internet outage. Even with backup battery power and configured, redundant DAHDI trunks, the system is rendered useless until the SIP trunks are manually disabled, which can be a difficult thing to guide a client through over the phone. When deployed in a cron job, this script, tested on F.PBX ver. 13 & 14, handles the configuration automatically. 
