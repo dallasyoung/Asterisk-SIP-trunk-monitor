@@ -36,9 +36,10 @@ emaildest="dyoung@ksp.ca"
 interactive=false
 debug=false
 # todo(dallas): replace xargs w/ sed
-interfaces=$($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs))
+#interfaces=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs)) # note(dallas): StackOverflow to the rescue! https://stackoverflow.com/questions/9293887/reading-a-delimited-string-into-an-array-in-bash
+interfaces=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs))
 num_interfaces=${#interfaces[@]}
-disabled=$($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $5}' | xargs))
+disabled=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $5}' | xargs))
 reload_needed=false
 filestamp="$(date +'%h %d %Y')"
 logfile="$logfilepath/$filestamp"
@@ -92,9 +93,9 @@ if [ $debug = true ]; then
 	echo address=$address
 	echo $num_interfaces SIP trunks found:
 	for i in $(seq 0 $(($num_interfaces-1))); do
-		if [ ${disabled[$i]} = "on" ]; then
+		if [ "${disabled[$i]}" = "on" ]; then
 			yes_no="yes"
-		elif [ ${disabled[$i]} = "off" ]; then
+		elif [ "${disabled[$i]}" = "off" ]; then
 			yes_no="no"
 		else
 			echo Error in debug loop!
@@ -117,9 +118,9 @@ echo min_acceptable_pings=$min_acceptable_pings >> $logfile
 echo address=$address >> $logfile
 echo $num_interfaces SIP trunks found: >> $logfile
 for i in $(seq 0 $(($num_interfaces-1))); do
-	if [ ${disabled[$i]} = "on" ]; then
+	if [ "${disabled[$i]}" = "on" ]; then
 		yes_no="yes"
-	elif [ ${disabled[$i]} = "off" ]; then
+	elif [ "${disabled[$i]}" = "off" ]; then
 		yes_no="no"
 	else
 		echo Error in debug loop! >> $logfile
