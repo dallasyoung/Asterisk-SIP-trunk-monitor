@@ -142,6 +142,9 @@ if [ $interactive = true ]; then
 fi
 echo pinging $address $ping_count times... >> $logfile
 pings=$(ping -c $ping_count $address | grep 'received' | awk -F',' '{print $2}' | awk '{print $1}')
+if [ -z "$pings" ]; then
+	pings=0
+fi
 if [ $interactive = true ]; then
 	echo "$pings successful pings to $address"
 fi
