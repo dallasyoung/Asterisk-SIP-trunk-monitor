@@ -36,10 +36,10 @@ emaildest="dyoung@ksp.ca"
 interactive=false
 debug=false
 # todo(dallas): replace xargs w/ sed
-#interfaces=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs)) # note(dallas): StackOverflow to the rescue! https://stackoverflow.com/questions/9293887/reading-a-delimited-string-into-an-array-in-bash
-interfaces=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs))
+#interfaces=($(/usr/local/sbin/fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs)) # note(dallas): StackOverflow to the rescue! https://stackoverflow.com/questions/9293887/reading-a-delimited-string-into-an-array-in-bash
+interfaces=($(/usr/local/sbin/fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $2}' | xargs))
 num_interfaces=${#interfaces[@]}
-disabled=($(fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $5}' | xargs))
+disabled=($(/usr/local/sbin/fwconsole trunk --list | grep 'sip' | awk -F'|' '{print $5}' | xargs))
 reload_needed=false
 filestamp="$(date +'%h %d %Y')"
 logfile="$logfilepath/$filestamp"
@@ -153,7 +153,7 @@ if [ $pings -lt $min_acceptable_pings ]; then
 	echo Unacceptable min ping threshold $min_acceptable_pings reached  >> $logfile
 	for i in $(seq 0 $(($num_interfaces-1))); do
 		if [ "${disabled[$i]}" = "off" ]; then
-			fwconsole trunk --disable "${interfaces[$i]}" > /dev/null
+			/usr/local/sbin/fwconsole trunk --disable "${interfaces[$i]}" > /dev/null
 			if [ $interactive = true ]; then
 				echo "Trunk ${interfaces[$i]} disabled on ${PBXname} at ${datestamp}"
 			fi
@@ -165,7 +165,7 @@ if [ $pings -lt $min_acceptable_pings ]; then
 else
 	for i in $(seq 0 $(($num_interfaces-1))); do
 		if [ "${disabled[$i]}" = "on" ]; then
-			fwconsole trunk --enable "${interfaces[$i]}" > /dev/null
+			/usr/local/sbin/fwconsole trunk --enable "${interfaces[$i]}" > /dev/null
 			if [ $interactive = true ]; then
 				echo "Trunk ${interfaces[$i]} enabled on ${PBXname} at ${datestamp}" 
 			fi
@@ -180,7 +180,7 @@ if [ $reload_needed = true ]; then
 		echo Reloading FreePBX...
 	fi
 	echo Reloading FreePBX... >> $logfile
-	fwconsole reload >> /dev/null
+	/usr/local/sbin/fwconsole reload >> /dev/null
 	if [ $interactive = true ]; then
 		echo Successfully reloaded
 	fi
