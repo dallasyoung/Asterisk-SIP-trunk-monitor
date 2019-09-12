@@ -29,7 +29,7 @@ pings=0
 ping_count=10
 min_acceptable_pings=8
 logfilepath="/var/log/asterisk/monitor"
-emaildest="dyoung@ksp.ca"
+emaildest="techs@ksp.ca"
 #--------------------
 # Don't touch these:
 #--------------------
